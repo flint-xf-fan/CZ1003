@@ -20,12 +20,21 @@ APP_NAME = 'APP NAME TO BE DECIDED'
 CANTEENS_PATH = 'assets/canteens.csv'
 MAP_PATH = 'assets/NTUCampus_google.png'
 
+# # to be discarded
+# def text_objects(text, font):
+#     textSurface = font.render(text, True, BLACK)
+#     return textSurface, textSurface.get_rect()
+            # button_text = pygame.font.Font("freesansbold.ttf", button_h//3)
+        # textSurf, textRect = text_objects("Where am I?", button_text) ## maybe wrap those as a function
+        # textRect.center = (button_x+(button_w//2), button_y+(button_h//2))
+        # screen.blit(textSurf, textRect)
 
-# necessary to display text to screen
-def text_objects(text, font):
-    textSurface = font.render(text, True, BLACK)
-    return textSurface, textSurface.get_rect()
-
+def draw_text(screen, pos, text, size=5, color=BLACK):
+    # text_surface = pygame.font.Font(font, size).render(text, True, color)
+    text_surface = pygame.font.SysFont("arial", size).render(text, True, color)
+    text_rect = text_surface.get_rect()
+    text_rect.center = pos
+    screen.blit(text_surface, text_rect)
 
 
 ##### functionalities #####
@@ -37,12 +46,14 @@ def get_user_pos(screen, time):
     waiting = True
     print('Now click one point on the map to get your location')
     while waiting:
-        dt = clock.tick(30) / 1000  # Takes the time between each loop and convert to seconds.
+        dt = clock.tick(FPS) / 1000  # Takes the time between each loop and convert to seconds.
         time -= dt
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 user_pos = event.pos
                 print('Your position is:', user_pos)
+                #
+                return user_pos
                 waiting = False
                 break
 
@@ -70,23 +81,42 @@ def read_canteens(df):
     canteens_list = []
 
     for _, row in df.iterrows():
-        canteens_list.append(Canteen(row['name'],
+        canteens_list.append(Canteen(row['id'],
+                                     row['name'],
                                      (row['pos_x'], row['pos_y']),
+                                     row['food_type'],
                                      row['review']))
 
     return canteens_list
 
 def draw_canteens(screen, canteens_list, color=LIGHT_GREEN, radius=15):
-    """
+    """ draw circles to represent the canteens. 
+    
+    right now only draw the canteen id on top of it. because name can be too lengthy
+    we may implement it an interactive button. So after the user clicks on it, we display the corresponding information
+    
     args:
         screen: pygame screen object
         canteens_list: list of canteen objects
         positions: list of canteen positions in (x, y) coords
+
+    returns:
+        canteenButton_list: list of pygame.rect objects
     """
+    canteenButton_list = []
+
     for i in range(len(canteens_list)):
         pos = canteens_list[i].pos
-        # name = canteens_list[i].name
+        name = canteens_list[i].name
+        canteen_id = str(canteens_list[i].id)
+
+        canteenButton_list.append(pygame.Rect(pos[0]-radius, pos[1]-radius, radius*2, radius*2))
         pygame.draw.circle(screen, color, pos, radius)
+        draw_text(screen, pos, canteen_id, 10)    
+
+    return canteenButton_list
+
+
 
 ##### main program #####
 def main():
@@ -113,52 +143,81 @@ def main():
     button_w = 120
     button_h = 50
     button_getUserPos = pygame.Rect(button_x, button_y, button_w, button_h)  # creates a rect object
-
+    
     # Loop until the user clicks the close button.
     done = False
-
+    dt = pygame.time.Clock().tick(FPS) / 1000
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
 
-            # # obtain mouse position on click
+            # obtain mouse position on click
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos  # gets mouse position
 
-                # checks if mouse position is over the button
-
+                # check if mouse position is over the get_user_pos button
                 if button_getUserPos.collidepoint(mouse_pos):
-                    # ask the user to click a position on the map
-                    get_user_pos(screen, 300)
-                    
+                    # ask the user to click a position on the map and store it for later use
+                    user_pos = get_user_pos(screen, 10)
+            
+                # check if mouse position is over one of the canteen buttons(circle)
+                if 'canteen_buttons' in locals():
+                    for i, canteen_button in enumerate(canteen_buttons):
+                        if canteen_button.collidepoint(mouse_pos):
+                            # canteen_name_temp = canteens_list[i].name
+                            # canteen_pos_temp = canteens_list[i].pos
+                            # draw the information about the cateen near it
+                            canteen_pressed_id = i
+                            canteen_pressed_time = 5
+                            print(canteens_list[i].name)
+                            # draw_text(screen, (canteen_pos_temp[0]+20, canteen_pos_temp[1]), canteen_name_temp, 10, BLACK)
+
+
         ##### clean the screen #####
         screen.fill(WHITE)
 
         ##### app logic #####
         ### test ###
-        # print(distance_a_b(canteen_positions[0], canteen_positions[1]))
+        # check if user_pos has been entered
+        if 'user_pos' in locals():
+            print(user_pos)
 
 
         ##### drawing code goes here #####
         ### display the map ###
         screen.blit(map_img, (map_x, map_y))
         ### draw canteens on the map ###
-        draw_canteens(screen, canteens_list)
+        canteen_buttons = draw_canteens(screen, canteens_list)
+        ### show canteens information after user clicked the button/circle
+        if 'canteen_pressed_id' in locals():
+            
+            
+            id_temp = canteen_pressed_id
+            canteen_name_temp = canteens_list[id_temp].name
+            canteen_food_temp = canteens_list[id_temp].food_type
+            canteen_review_temp = "Review: " + str(canteens_list[id_temp].review)
+            canteen_pos_temp = canteens_list[id_temp].pos
+            draw_text(screen, (canteen_pos_temp[0]+60, canteen_pos_temp[1]), canteen_name_temp, 10, BLACK)
+            draw_text(screen, (canteen_pos_temp[0]+60, canteen_pos_temp[1]+10), canteen_food_temp, 10, BLACK)
+            draw_text(screen, (canteen_pos_temp[0]+60, canteen_pos_temp[1]+20), canteen_review_temp, 10, BLACK)
+
+            canteen_pressed_time -= dt
+            # wait for 5s
+            if canteen_pressed_time <= 0:
+                del canteen_pressed_id
 
         ### get_user_pos button ###
         mouse = pygame.mouse.get_pos()
         if button_x < mouse[0] < button_x+button_w and button_y < mouse[1] < button_y+button_h: # mouse hover the button
             pygame.draw.rect(screen, [255, 0, 0], button_getUserPos)
-            button_text = pygame.font.Font("freesansbold.ttf", int(button_h/2.5))
+            draw_text(screen, (button_x+(button_w//2), button_y+(button_h//2)), "Where am I?", int(button_h/2.5), color=BLACK)
         else:
             pygame.draw.rect(screen, [200, 0, 0], button_getUserPos)  # button
-            button_text = pygame.font.Font("freesansbold.ttf", button_h//3)
+            draw_text(screen, (button_x+(button_w//2), button_y+(button_h//2)), "Where am I?", button_h//3, color=BLACK)
 
-        textSurf, textRect = text_objects("get_user_pos", button_text)
-        textRect.center = (button_x+(button_w//2), button_y+(button_h//2))
-        screen.blit(textSurf, textRect)
-        
+
+
 
         
         
