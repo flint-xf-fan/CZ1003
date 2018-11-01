@@ -138,12 +138,19 @@ def main():
     map_x = 100 # maybe move up later
     map_y = 100
 
-    button_x = 50
-    button_y = 50
-    button_w = 120
-    button_h = 50
-    button_getUserPos = pygame.Rect(button_x, button_y, button_w, button_h)  # creates a rect object
-    
+
+    button_getUserPos_x = 50
+    button_getUserPos_y = 50
+    button_getUserPos_w = 120
+    button_getUserPos_h = 50
+    button_getUserPos = pygame.Rect(button_getUserPos_x, button_getUserPos_y, button_getUserPos_w, button_getUserPos_h)  # creates a rect object
+
+    button_getNearestCanteen_x = 200
+    button_getNearestCanteen_y = 50
+    button_getNearestCanteen_w = 220
+    button_getNearestCanteen_h = 50
+    button_getNearesrCanteen = pygame.Rect(button_getNearestCanteen_x, button_getNearestCanteen_y, button_getNearestCanteen_w, button_getNearestCanteen_h)  # creates a rect object
+
     # Loop until the user clicks the close button.
     done = False
     dt = pygame.time.Clock().tick(FPS) / 1000
@@ -209,15 +216,21 @@ def main():
 
         ### get_user_pos button ###
         mouse = pygame.mouse.get_pos()
-        if button_x < mouse[0] < button_x+button_w and button_y < mouse[1] < button_y+button_h: # mouse hover the button
+        if button_getUserPos_x < mouse[0] < button_getUserPos_x+button_getUserPos_w and button_getUserPos_y < mouse[1] < button_getUserPos_y+button_getUserPos_h: # mouse hover the button
             pygame.draw.rect(screen, [255, 0, 0], button_getUserPos)
-            draw_text(screen, (button_x+(button_w//2), button_y+(button_h//2)), "Where am I?", int(button_h/2.5), color=BLACK)
+            draw_text(screen, (button_getUserPos_x+(button_getUserPos_w//2), button_getUserPos_y+(button_getUserPos_h//2)), "Where am I?", int(button_getUserPos_h/2.5), color=BLACK)
         else:
             pygame.draw.rect(screen, [200, 0, 0], button_getUserPos)  # button
-            draw_text(screen, (button_x+(button_w//2), button_y+(button_h//2)), "Where am I?", button_h//3, color=BLACK)
+            draw_text(screen, (button_getUserPos_x+(button_getUserPos_w//2), button_getUserPos_y+(button_getUserPos_h//2)), "Where am I?", button_getUserPos_h//3, color=BLACK)
 
 
-
+        ### get_nearest_canteen button ###
+        if button_getNearestCanteen_x < mouse[0] < button_getNearestCanteen_x+button_getNearestCanteen_w and button_getNearestCanteen_y < mouse[1] < button_getNearestCanteen_y+button_getNearestCanteen_h: # mouse hover the button
+            pygame.draw.rect(screen, [255, 0, 0], button_getNearesrCanteen)
+            draw_text(screen, (button_getNearestCanteen_x+(button_getNearestCanteen_w//2), button_getNearestCanteen_y+(button_getNearestCanteen_h//2)), "The nearest canteen?", int(button_getNearestCanteen_h/2.5), color=BLACK)
+        else:
+            pygame.draw.rect(screen, [200, 0, 0], button_getNearesrCanteen)  # button
+            draw_text(screen, (button_getNearestCanteen_x+(button_getNearestCanteen_w//2), button_getNearestCanteen_y+(button_getNearestCanteen_h//2)), "The nearest canteen?", button_getNearestCanteen_h//3, color=BLACK)
 
         
         
