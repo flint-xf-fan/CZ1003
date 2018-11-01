@@ -3,7 +3,7 @@ import sys
 import math
 import pandas as pd
 
-from canteen_class import Canteen
+from canteen_class import Canteen, InputBox
 
 ##### application configuration #####
 FPS = 60
@@ -20,14 +20,6 @@ APP_NAME = 'APP NAME TO BE DECIDED'
 CANTEENS_PATH = 'assets/canteens.csv'
 MAP_PATH = 'assets/NTUCampus_google.png'
 
-# # to be discarded
-# def text_objects(text, font):
-#     textSurface = font.render(text, True, BLACK)
-#     return textSurface, textSurface.get_rect()
-            # button_text = pygame.font.Font("freesansbold.ttf", button_h//3)
-        # textSurf, textRect = text_objects("Where am I?", button_text) ## maybe wrap those as a function
-        # textRect.center = (button_x+(button_w//2), button_y+(button_h//2))
-        # screen.blit(textSurf, textRect)
 
 def draw_text(screen, pos, text, size=5, color=BLACK):
     # text_surface = pygame.font.Font(font, size).render(text, True, color)
@@ -41,6 +33,9 @@ def draw_text(screen, pos, text, size=5, color=BLACK):
 def get_user_pos(screen, time):
     """
     Makes the program halt for 'time' seconds or until the user performs the action.
+
+    ToDo:
+        * limit the user to only click any point within the map.
     """
     clock = pygame.time.Clock()
     waiting = True
@@ -54,13 +49,14 @@ def get_user_pos(screen, time):
                 print('Your position is:', user_pos)
                 #
                 return user_pos
-                waiting = False
-                break
+                # waiting = False
+                # break
 
         if time <= 0:
             waiting = False
 
-def distance_a_b(pos_a, pos_b):
+
+def get_distance_a_b(pos_a, pos_b):
     """ computes the absolute distance between pos_a and pos_b
     args:
         pos_a: (x, y) coords of a
@@ -69,6 +65,17 @@ def distance_a_b(pos_a, pos_b):
         distance: absolute distance
     """
     return math.sqrt((pos_b[1] - pos_a[1])**2 + (pos_b[0] - pos_a[0])**2) 
+
+def get_nearest_canteen(user_pos, canteens_list):
+    min_distance = float('inf')
+    # min_dist_canteen = canteens_list[0].name
+    for canteen in canteens_list:
+        d = get_distance_a_b(user_pos, canteen.pos)
+        if d < min_distance:
+            min_dist_canteen = canteen
+            min_distance = d
+    return min_dist_canteen
+
 
 def read_canteens(df):
     """
@@ -116,6 +123,11 @@ def draw_canteens(screen, canteens_list, color=LIGHT_GREEN, radius=15):
 
     return canteenButton_list
 
+def get_user_input():
+    """
+    """
+    pass
+    
 
 
 ##### main program #####
@@ -135,9 +147,10 @@ def main():
     
 
     map_img = pygame.image.load(MAP_PATH)
-    map_x = 100 # maybe move up later
-    map_y = 100
 
+    # maybe move up or move to a separate configure file
+    map_x = 0 
+    map_y = 100
 
     button_getUserPos_x = 50
     button_getUserPos_y = 50
@@ -151,11 +164,17 @@ def main():
     button_getNearestCanteen_h = 50
     button_getNearesrCanteen = pygame.Rect(button_getNearestCanteen_x, button_getNearestCanteen_y, button_getNearestCanteen_w, button_getNearestCanteen_h)  # creates a rect object
 
+    ## box input
+    box_getUserInput_coords = [800, 50, 300, 50]
+    box_getUserInput = InputBox(box_getUserInput_coords[0],box_getUserInput_coords[1],box_getUserInput_coords[2],box_getUserInput_coords[3])
+
     # Loop until the user clicks the close button.
     done = False
     dt = pygame.time.Clock().tick(FPS) / 1000
     while not done:
-        for event in pygame.event.get():
+
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 done = True
 
@@ -167,7 +186,17 @@ def main():
                 if button_getUserPos.collidepoint(mouse_pos):
                     # ask the user to click a position on the map and store it for later use
                     user_pos = get_user_pos(screen, 10)
-            
+
+                # check if mouse position is over the get_user_pos button
+                if button_getNearesrCanteen.collidepoint(mouse_pos):
+                    try:
+                        assert 'user_pos' in locals()
+                        print("The nearest canteen to your position is:", get_nearest_canteen(user_pos, canteens_list).name)
+                        pass
+                    except:
+                        print('You have not input your position yet.')
+
+
                 # check if mouse position is over one of the canteen buttons(circle)
                 if 'canteen_buttons' in locals():
                     for i, canteen_button in enumerate(canteen_buttons):
@@ -180,16 +209,18 @@ def main():
                             print(canteens_list[i].name)
                             # draw_text(screen, (canteen_pos_temp[0]+20, canteen_pos_temp[1]), canteen_name_temp, 10, BLACK)
 
-
+            box_getUserInput.handle_event(event)
         ##### clean the screen #####
         screen.fill(WHITE)
 
         ##### app logic #####
         ### test ###
-        # check if user_pos has been entered
-        if 'user_pos' in locals():
-            print(user_pos)
 
+
+        # Feed the box_input with events every frame
+        box_getUserInput.update()
+        box_getUserInput.draw(screen)
+        
 
         ##### drawing code goes here #####
         ### display the map ###
@@ -198,8 +229,6 @@ def main():
         canteen_buttons = draw_canteens(screen, canteens_list)
         ### show canteens information after user clicked the button/circle
         if 'canteen_pressed_id' in locals():
-            
-            
             id_temp = canteen_pressed_id
             canteen_name_temp = canteens_list[id_temp].name
             canteen_food_temp = canteens_list[id_temp].food_type
@@ -214,7 +243,7 @@ def main():
             if canteen_pressed_time <= 0:
                 del canteen_pressed_id
 
-        ### get_user_pos button ###
+        ### draw get_user_pos button ###
         mouse = pygame.mouse.get_pos()
         if button_getUserPos_x < mouse[0] < button_getUserPos_x+button_getUserPos_w and button_getUserPos_y < mouse[1] < button_getUserPos_y+button_getUserPos_h: # mouse hover the button
             pygame.draw.rect(screen, [255, 0, 0], button_getUserPos)
@@ -224,7 +253,7 @@ def main():
             draw_text(screen, (button_getUserPos_x+(button_getUserPos_w//2), button_getUserPos_y+(button_getUserPos_h//2)), "Where am I?", button_getUserPos_h//3, color=BLACK)
 
 
-        ### get_nearest_canteen button ###
+        ### draw get_nearest_canteen button ###
         if button_getNearestCanteen_x < mouse[0] < button_getNearestCanteen_x+button_getNearestCanteen_w and button_getNearestCanteen_y < mouse[1] < button_getNearestCanteen_y+button_getNearestCanteen_h: # mouse hover the button
             pygame.draw.rect(screen, [255, 0, 0], button_getNearesrCanteen)
             draw_text(screen, (button_getNearestCanteen_x+(button_getNearestCanteen_w//2), button_getNearestCanteen_y+(button_getNearestCanteen_h//2)), "The nearest canteen?", int(button_getNearestCanteen_h/2.5), color=BLACK)
@@ -232,7 +261,6 @@ def main():
             pygame.draw.rect(screen, [200, 0, 0], button_getNearesrCanteen)  # button
             draw_text(screen, (button_getNearestCanteen_x+(button_getNearestCanteen_w//2), button_getNearestCanteen_y+(button_getNearestCanteen_h//2)), "The nearest canteen?", button_getNearestCanteen_h//3, color=BLACK)
 
-        
         
         pygame.display.update()
         clock.tick(FPS)
