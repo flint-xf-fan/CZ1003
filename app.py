@@ -97,6 +97,7 @@ def read_canteens(df):
                                      row['rating'],
                                      row['price_range']))
 
+
     return canteens_list
 
 def draw_canteens(screen, canteens_list, color=LIGHT_GREEN, radius=15):
