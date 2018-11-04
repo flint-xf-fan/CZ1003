@@ -90,9 +90,12 @@ def read_canteens(df):
     for _, row in df.iterrows():
         canteens_list.append(Canteen(row['id'],
                                      row['name'],
+                                     row['location'],
                                      (row['pos_x'], row['pos_y']),
-                                     row['food_type'],
-                                     row['review']))
+                                     row['food_types'],
+                                     row['opening_closing_times'],
+                                     row['rating'],
+                                     row['price_range']))
 
     return canteens_list
 
@@ -114,7 +117,6 @@ def draw_canteens(screen, canteens_list, color=LIGHT_GREEN, radius=15):
 
     for i in range(len(canteens_list)):
         pos = canteens_list[i].pos
-        name = canteens_list[i].name
         canteen_id = str(canteens_list[i].id)
 
         canteenButton_list.append(pygame.Rect(pos[0]-radius, pos[1]-radius, radius*2, radius*2))
@@ -205,7 +207,7 @@ def main():
                             # canteen_pos_temp = canteens_list[i].pos
                             # draw the information about the cateen near it
                             canteen_pressed_id = i
-                            canteen_pressed_time = 5
+                            canteen_pressed_time = 3
                             print(canteens_list[i].name)
                             # draw_text(screen, (canteen_pos_temp[0]+20, canteen_pos_temp[1]), canteen_name_temp, 10, BLACK)
 
@@ -230,16 +232,20 @@ def main():
         ### show canteens information after user clicked the button/circle
         if 'canteen_pressed_id' in locals():
             id_temp = canteen_pressed_id
-            canteen_name_temp = canteens_list[id_temp].name
-            canteen_food_temp = canteens_list[id_temp].food_type
-            canteen_review_temp = "Review: " + str(canteens_list[id_temp].review)
+
             canteen_pos_temp = canteens_list[id_temp].pos
-            draw_text(screen, (canteen_pos_temp[0]+60, canteen_pos_temp[1]), canteen_name_temp, 10, BLACK)
-            draw_text(screen, (canteen_pos_temp[0]+60, canteen_pos_temp[1]+10), canteen_food_temp, 10, BLACK)
-            draw_text(screen, (canteen_pos_temp[0]+60, canteen_pos_temp[1]+20), canteen_review_temp, 10, BLACK)
+            line_space = 5
+            for attr, value in canteens_list[id_temp].__dict__.items():
+                # print(attr)
+                if not attr in ['id', 'pos', 'food_types']: # no data for food_types yet
+                    draw_text(screen, 
+                            (canteen_pos_temp[0]+60, canteen_pos_temp[1]+line_space),
+                            value,
+                            10, BLACK)
+                    line_space += 10
 
             canteen_pressed_time -= dt
-            # wait for 5s
+            # wait for 3s
             if canteen_pressed_time <= 0:
                 del canteen_pressed_id
 
