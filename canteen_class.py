@@ -1,12 +1,15 @@
 import pygame as pg
 pg.init()
 class Canteen(object):
-    def __init__(self, id, name, pos, food_type, review):
+    def __init__(self, id, name, location, pos, food_types, opening_closing_times, rating, price_range):
         self.id = id
         self.name = name
+        self.location = location
         self.pos = pos
-        self.food_type = food_type
-        self.review = review
+        self.food_types = food_types
+        self.opening_closing_times = opening_closing_times
+        self.rating = rating
+        self.price_range = price_range
         # more attributes to fill in
 
 COLOR_INACTIVE = pg.Color('lightskyblue3')

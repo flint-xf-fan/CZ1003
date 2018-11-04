@@ -1,4 +1,31 @@
-id,name,pos_x,pos_y,food_type,review
-0,Food Court 1,300,300,test_food_0,5
-1,Food Court 2,200,400,test_food_1,4
-2,TEST,500,300,test,2
+id,name,location,pos_x,pos_y,opening_closing_times,rating,price_range,food_types
+0,Food Court 1,Hall 1,300,300,7:00 am-9:00 pm,4/5,$4-$15
+1,Food Court 2,Hall 2,350,300,7:00 am-9:00 pm,3/5,$5-$18
+2,Food Court 9,Hall 9,150,250,7:00 am-9:00 pm,4/5,$4-$15
+3,Food Court 11,Hall 11,100,120,7:00 am-9:00 pm,4/5,$4-$15
+4,Food Court 13,Hall 13,110,125,7:00 am-9:00 pm,4/5,$4-$15
+5,Food Court 14,Hall 14,160,130,7:00 am-9:00 pm,4/5,$4-$15
+6,Food Court 16,Hall 16,200,150,7:00 am-9:00 pm,4/5,$4-$15
+7,Amanda Kitchen,North Hill Precinct,800,200,12:00 pm-10:30 pm,4.5/5,$10-$25
+8,Foodgle Food Court,Nanyang Cresent,350,340,7:00 am-9:00 pm,3/5,$8-$18
+9,North Hill Food Court,North Hill Precinct,800,200,7:00 am-9:00 pm,4/5,$4-$15
+10,Pioneer Food Court,Pioneer Hall,300,250,7:00 am-9:00 pm,4/5,$4-$15
+11,Quad Cafe,School of Biological Sciences,200,300,7:00 am-9:00 pm,3.5/5,$5-$10
+12,Bakery Cuisine,North Spine Plaza,500,300,7:00 am-9:00 pm,4.2/5,$2-$5
+13,Each-A-Cup,North Spine Plaza,500,300,9:00 am-9:00 pm,4.7/5,$2-$5
+14,Grande Cibo,North Spine Plaza,500,300,11:00 am-8:00 pm,4/5,$7-$20
+15,KFC,North Spine Plaza,500,300,7:30 am-10:30 pm,4.6/5,$5-$15
+16,Long John Silver's,North Spine Plaza,500,300,7:30 am-10:00 pm,3.9/5,$5-$10
+17,McDonald's,North Spine Plaza,500,300,7:00 am-12:00 am,4.8/5,$5-$20
+18,Mr Bean,North Spine Plaza,500,300,7:30 am- 8:30 pm,4/5,$3-$7
+19,North Spine Food Court,North Spine Plaza,500,300,7:00 am-9:00 pm,4/5,$4-$15
+20,Paik Bibim,North Spine Plaza,500,300,10:00 am-9:00pm,4.9/5,$5-$18
+21,Peach Garden Chinese Restaurant,North Spine Plaza,500,300,11:00 am-2:30 pm and 5:00 pm-10:00 pm,4.3/5,$20-$50
+22,PEN & INC,North Spine Plaza,500,300,11:00 am-11:00 pm,4/5,$5-$10
+23,Pizza Hut Express,North Spine Plaza,500,300,11:00 am-10:00 pm,4.5/5,$5-$9
+24,StarBucks Coffee,North Spine Plaza,500,300,7:00 am-10:00 pm,4.8/5,$4-$10
+25,Subway,North Spine Plaza,500,300,8:00 am-9:00 pm,4.6/5,&5-$15
+26,The House Steam Boat Restaurant,North Spine Plaza,500,300,9:00 am-9:00 pm,4.4/5,$6-$20
+27,The Sandwich Guys,North Spine Plaza,500,300,10:00 am-8:00 pm,4.6/5,$4-$8
+28,The Soup Spoon Union,North Spine Plaza,500,300,11:00 am-9:00 pm,4.2/5,$3-$12
+29,Koufu,South Spine,50,250,7:00 am-9:00 pm,4.1/5,$4-$15
