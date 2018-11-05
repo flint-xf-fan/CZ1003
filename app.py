@@ -7,7 +7,7 @@ from canteen_class import Canteen, InputBox
 
 ##### application configuration #####
 FPS = 60
-SIZE = (1024, 720)
+SIZE = (1500, 920)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -18,7 +18,7 @@ LIGHT_GREEN = (0, 200, 0)
 
 APP_NAME = 'APP NAME TO BE DECIDED'
 CANTEENS_PATH = 'assets/canteens.csv'
-MAP_PATH = 'assets/NTUCampus_google.png'
+MAP_PATH = 'assets/NTUCampus.png'
 
 
 def draw_text(screen, pos, text, size=5, color=BLACK):
@@ -152,23 +152,25 @@ def main():
 
     # maybe move up or move to a separate configure file
     map_x = 0 
-    map_y = 100
+    map_y = 0
 
-    button_getUserPos_x = 50
-    button_getUserPos_y = 50
-    button_getUserPos_w = 120
+    button_getUserPos_x = 1278
+    button_getUserPos_y = 0
+    button_getUserPos_w = 220
     button_getUserPos_h = 50
     button_getUserPos = pygame.Rect(button_getUserPos_x, button_getUserPos_y, button_getUserPos_w, button_getUserPos_h)  # creates a rect object
 
-    button_getNearestCanteen_x = 200
-    button_getNearestCanteen_y = 50
+    button_getNearestCanteen_x = 1278
+    button_getNearestCanteen_y = 100
     button_getNearestCanteen_w = 220
     button_getNearestCanteen_h = 50
     button_getNearesrCanteen = pygame.Rect(button_getNearestCanteen_x, button_getNearestCanteen_y, button_getNearestCanteen_w, button_getNearestCanteen_h)  # creates a rect object
 
     ## box input
-    box_getUserInput_coords = [800, 50, 300, 50]
-    box_getUserInput = InputBox(box_getUserInput_coords[0],box_getUserInput_coords[1],box_getUserInput_coords[2],box_getUserInput_coords[3])
+    label_foodType_coords = [1388, 250, 220, 30]
+
+    box_foodType_coords = [1278, 300, 220, 50]
+    box_foodType = InputBox(box_foodType_coords[0],box_foodType_coords[1],box_foodType_coords[2],box_foodType_coords[3])
 
     # Loop until the user clicks the close button.
     done = False
@@ -211,7 +213,7 @@ def main():
                             print(canteens_list[i].name)
                             # draw_text(screen, (canteen_pos_temp[0]+20, canteen_pos_temp[1]), canteen_name_temp, 10, BLACK)
 
-            box_getUserInput.handle_event(event)
+            box_foodType.handle_event(event)
         ##### clean the screen #####
         screen.fill(WHITE)
 
@@ -219,12 +221,14 @@ def main():
         ### test ###
 
 
-        # Feed the box_input with events every frame
-        box_getUserInput.update()
-        box_getUserInput.draw(screen)
-        
-
         ##### drawing code goes here #####
+
+        # Feed the box_input with events every frame
+        box_foodType.update()
+        box_foodType.draw(screen)
+        draw_text(screen, (label_foodType_coords[0],label_foodType_coords[1]), 
+                 'Search By Food Type', size=20, color=BLACK)
+
         ### display the map ###
         screen.blit(map_img, (map_x, map_y))
         ### draw canteens on the map ###
