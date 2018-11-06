@@ -154,22 +154,26 @@ def main():
     map_x = 0 
     map_y = 0
 
-    button_getUserPos_x = 1278
-    button_getUserPos_y = 0
-    button_getUserPos_w = 220
-    button_getUserPos_h = 50
-    button_getUserPos = pygame.Rect(button_getUserPos_x, button_getUserPos_y, button_getUserPos_w, button_getUserPos_h)  # creates a rect object
+    # button to ask user to select location on the map
+    button_getUserPos_coords = [1278, 0, 220, 50]
+    button_getUserPos = pygame.Rect(button_getUserPos_coords[0], button_getUserPos_coords[1], button_getUserPos_coords[2], button_getUserPos_coords[3])
 
-    button_getNearestCanteen_x = 1278
-    button_getNearestCanteen_y = 100
-    button_getNearestCanteen_w = 220
-    button_getNearestCanteen_h = 50
-    button_getNearesrCanteen = pygame.Rect(button_getNearestCanteen_x, button_getNearestCanteen_y, button_getNearestCanteen_w, button_getNearestCanteen_h)  # creates a rect object
+    # button to get the nearest canteen
+    button_getNearestCanteen_coords = [1278, 50, 220, 50]
+    button_getNearesrCanteen = pygame.Rect(button_getNearestCanteen_coords[0], button_getNearestCanteen_coords[1], button_getNearestCanteen_coords[2], button_getNearestCanteen_coords[3])
+
+    # button to sort canteens by (absolute) distance
+    button_sortByDistance_coords = [1278, 100, 220, 50]
+    button_sortByDistance = pygame.Rect(button_sortByDistance_coords[0],button_sortByDistance_coords[1],button_sortByDistance_coords[2],button_sortByDistance_coords[3])
+
+    # button to sort canteens by Rank
+    button_sortByRank_coords = [1278, 150, 220, 50]
+    button_sortByRank = pygame.Rect(button_sortByRank_coords[0],button_sortByRank_coords[1],button_sortByRank_coords[2],button_sortByRank_coords[3])
 
     ## box input
-    label_foodType_coords = [1388, 250, 220, 30]
+    label_foodType_coords = [1388, 450, 220, 30]
 
-    box_foodType_coords = [1278, 300, 220, 50]
+    box_foodType_coords = [1278, 500, 220, 50]
     box_foodType = InputBox(box_foodType_coords[0],box_foodType_coords[1],box_foodType_coords[2],box_foodType_coords[3])
 
     # Loop until the user clicks the close button.
@@ -253,31 +257,39 @@ def main():
             if canteen_pressed_time <= 0:
                 del canteen_pressed_id
 
-        ### draw get_user_pos button ###
+        ### draw interactive buttons ###
         mouse = pygame.mouse.get_pos()
-        if button_getUserPos_x < mouse[0] < button_getUserPos_x+button_getUserPos_w and button_getUserPos_y < mouse[1] < button_getUserPos_y+button_getUserPos_h: # mouse hover the button
-            pygame.draw.rect(screen, [255, 0, 0], button_getUserPos)
-            draw_text(screen, (button_getUserPos_x+(button_getUserPos_w//2), button_getUserPos_y+(button_getUserPos_h//2)), "Where am I?", int(button_getUserPos_h/2.5), color=BLACK)
-        else:
-            pygame.draw.rect(screen, [200, 0, 0], button_getUserPos)  # button
-            draw_text(screen, (button_getUserPos_x+(button_getUserPos_w//2), button_getUserPos_y+(button_getUserPos_h//2)), "Where am I?", button_getUserPos_h//3, color=BLACK)
-
-
-        ### draw get_nearest_canteen button ###
-        if button_getNearestCanteen_x < mouse[0] < button_getNearestCanteen_x+button_getNearestCanteen_w and button_getNearestCanteen_y < mouse[1] < button_getNearestCanteen_y+button_getNearestCanteen_h: # mouse hover the button
-            pygame.draw.rect(screen, [255, 0, 0], button_getNearesrCanteen)
-            draw_text(screen, (button_getNearestCanteen_x+(button_getNearestCanteen_w//2), button_getNearestCanteen_y+(button_getNearestCanteen_h//2)), "The nearest canteen?", int(button_getNearestCanteen_h/2.5), color=BLACK)
-        else:
-            pygame.draw.rect(screen, [200, 0, 0], button_getNearesrCanteen)  # button
-            draw_text(screen, (button_getNearestCanteen_x+(button_getNearestCanteen_w//2), button_getNearestCanteen_y+(button_getNearestCanteen_h//2)), "The nearest canteen?", button_getNearestCanteen_h//3, color=BLACK)
-
         
+        draw_button(screen, button_getUserPos, button_getUserPos_coords, mouse, 'Where am I?', GREEN, RED, BLACK)
+        draw_button(screen, button_getNearesrCanteen, button_getNearestCanteen_coords, mouse, 'The nearest canteen?', GREEN, RED, BLACK)
+        draw_button(screen, button_sortByDistance, button_sortByDistance_coords, mouse, 'Sort by Distance (top5)', GREEN, RED, BLACK)
+        draw_button(screen, button_sortByRank, button_sortByRank_coords, mouse, 'Sort by Rank (Top5)', GREEN, RED, BLACK)
+
         pygame.display.update()
         clock.tick(FPS)
         # print('Running test')
 
     pygame.quit()
     sys.exit
+
+def draw_button(screen, button, button_coords, mouse_pos, text, color=GREEN, active_color=RED, text_color=BLACK):
+    """
+    args:
+        screen: pygame screen object
+        button: pygame.Rect object
+        button_coords: list of button coordinates - [x,y,w,h]
+        mouse_pos: coords of mouse - (x,y)
+        text: text to be displayed on the button
+        color: default color of button
+        active_color: color when mouse hovers on the button
+        text_color: color of button text
+    """
+    if button_coords[0] < mouse_pos[0] < button_coords[0]+button_coords[2] and button_coords[1] < mouse_pos[1] < button_coords[1]+button_coords[3]: # mouse hover the button
+        pygame.draw.rect(screen, RED, button)
+        draw_text(screen, (button_coords[0]+(button_coords[2]//2), button_coords[1]+(button_coords[3]//2)), text, int(button_coords[3]/2.5), color=BLACK)
+    else:
+        pygame.draw.rect(screen, GREEN, button)  # button
+        draw_text(screen, (button_coords[0]+(button_coords[2]//2), button_coords[1]+(button_coords[3]//2)), text, button_coords[3]//3, color=BLACK)
 
 if __name__ == '__main__':
     main()
