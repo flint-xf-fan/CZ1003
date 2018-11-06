@@ -131,6 +131,20 @@ def get_user_input():
     pass
     
 
+def sort_canteens_by_attr(canteens_list, attr='distance', user_pos=None, k=5):
+    """
+    args:
+        user_pos:
+        canteens_list:
+        attr: distance or rating
+        k: top k canteens to be returned
+    """
+    if attr == 'distance':
+        canteens_list_sorted = sorted(canteens_list, key=lambda x: get_distance_a_b(user_pos, x.pos))
+    else:
+        # the format of canteen.rating is 4/5
+        canteens_list_sorted = sorted(canteens_list, key=lambda x: x.rating.split('/')[0], reverse=True)
+    return [(canteens_list_sorted[i].name, canteens_list_sorted[i].rating) for i in range(k)]
 
 ##### main program #####
 def main():
@@ -166,9 +180,9 @@ def main():
     button_sortByDistance_coords = [1278, 100, 220, 50]
     button_sortByDistance = pygame.Rect(button_sortByDistance_coords[0],button_sortByDistance_coords[1],button_sortByDistance_coords[2],button_sortByDistance_coords[3])
 
-    # button to sort canteens by Rank
-    button_sortByRank_coords = [1278, 150, 220, 50]
-    button_sortByRank = pygame.Rect(button_sortByRank_coords[0],button_sortByRank_coords[1],button_sortByRank_coords[2],button_sortByRank_coords[3])
+    # button to sort canteens by Rating
+    button_sortByRating_coords = [1278, 150, 220, 50]
+    button_sortByRating = pygame.Rect(button_sortByRating_coords[0],button_sortByRating_coords[1],button_sortByRating_coords[2],button_sortByRating_coords[3])
 
     ## box input
     label_foodType_coords = [1388, 450, 220, 30]
@@ -190,12 +204,12 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos  # gets mouse position
 
-                # check if mouse position is over the get_user_pos button
+                # if get_user_pos button is pressed
                 if button_getUserPos.collidepoint(mouse_pos):
                     # ask the user to click a position on the map and store it for later use
                     user_pos = get_user_pos(screen, 10)
 
-                # check if mouse position is over the get_user_pos button
+                # if get_user_pos button is pressed
                 if button_getNearesrCanteen.collidepoint(mouse_pos):
                     try:
                         assert 'user_pos' in locals()
@@ -203,6 +217,20 @@ def main():
                         pass
                     except:
                         print('You have not input your position yet.')
+
+                # if sort_by_distance button is pressed
+                if button_sortByDistance.collidepoint(mouse_pos):
+                    try:
+                        assert 'user_pos' in locals()
+                        print("The nearest 5 canteens are:", sort_canteens_by_attr(canteens_list, attr='distance', user_pos=user_pos, k=5))
+                        pass
+                    except:
+                        print('You have not input your position yet.')
+
+                # if sort_by_rating button is pressed
+                if button_sortByRating.collidepoint(mouse_pos):
+                    print("The top 5 canteens by ratings are:", sort_canteens_by_attr(canteens_list, attr='rating', k=5))
+                    pass
 
 
                 # check if mouse position is over one of the canteen buttons(circle)
@@ -263,7 +291,7 @@ def main():
         draw_button(screen, button_getUserPos, button_getUserPos_coords, mouse, 'Where am I?', GREEN, RED, BLACK)
         draw_button(screen, button_getNearesrCanteen, button_getNearestCanteen_coords, mouse, 'The nearest canteen?', GREEN, RED, BLACK)
         draw_button(screen, button_sortByDistance, button_sortByDistance_coords, mouse, 'Sort by Distance (top5)', GREEN, RED, BLACK)
-        draw_button(screen, button_sortByRank, button_sortByRank_coords, mouse, 'Sort by Rank (Top5)', GREEN, RED, BLACK)
+        draw_button(screen, button_sortByRating, button_sortByRating_coords, mouse, 'Sort by Rating (Top5)', GREEN, RED, BLACK)
 
         pygame.display.update()
         clock.tick(FPS)
