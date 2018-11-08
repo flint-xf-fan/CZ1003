@@ -3,11 +3,11 @@ import sys
 import math
 import pandas as pd
 
-from canteen_class import Canteen, InputBox
+from canteen_class import Canteen, InputBox, userInput
 
 ##### application configuration #####
 FPS = 60
-SIZE = (1500, 920)
+SIZE = (1300, 920)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -169,25 +169,25 @@ def main():
     map_y = 0
 
     # button to ask user to select location on the map
-    button_getUserPos_coords = [1278, 0, 220, 50]
+    button_getUserPos_coords = [1020, 0, 220, 50]
     button_getUserPos = pygame.Rect(button_getUserPos_coords[0], button_getUserPos_coords[1], button_getUserPos_coords[2], button_getUserPos_coords[3])
 
     # button to get the nearest canteen
-    button_getNearestCanteen_coords = [1278, 50, 220, 50]
+    button_getNearestCanteen_coords = [1020, 50, 220, 50]
     button_getNearesrCanteen = pygame.Rect(button_getNearestCanteen_coords[0], button_getNearestCanteen_coords[1], button_getNearestCanteen_coords[2], button_getNearestCanteen_coords[3])
 
     # button to sort canteens by (absolute) distance
-    button_sortByDistance_coords = [1278, 100, 220, 50]
+    button_sortByDistance_coords = [1020, 100, 220, 50]
     button_sortByDistance = pygame.Rect(button_sortByDistance_coords[0],button_sortByDistance_coords[1],button_sortByDistance_coords[2],button_sortByDistance_coords[3])
 
     # button to sort canteens by Rating
-    button_sortByRating_coords = [1278, 150, 220, 50]
+    button_sortByRating_coords = [1020, 150, 220, 50]
     button_sortByRating = pygame.Rect(button_sortByRating_coords[0],button_sortByRating_coords[1],button_sortByRating_coords[2],button_sortByRating_coords[3])
 
     ## box input
-    label_foodType_coords = [1388, 450, 220, 30]
+    label_foodType_coords = [1140, 450, 220, 30]
 
-    box_foodType_coords = [1278, 500, 220, 50]
+    box_foodType_coords = [1140, 500, 220, 50]
     box_foodType = InputBox(box_foodType_coords[0],box_foodType_coords[1],box_foodType_coords[2],box_foodType_coords[3])
 
     # Loop until the user clicks the close button.
@@ -250,7 +250,11 @@ def main():
         screen.fill(WHITE)
 
         ##### app logic #####
-        ### test ###
+        
+
+        ### user input after entern is pressed comes here
+        if userInput:
+            userInput_str = userInput[0]
 
 
         ##### drawing code goes here #####
