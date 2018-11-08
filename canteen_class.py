@@ -17,6 +17,8 @@ class Canteen(object):
 COLOR_INACTIVE = pg.Color('lightskyblue3')
 COLOR_ACTIVE = pg.Color('dodgerblue2')
 FONT = pg.font.Font(None, 32)
+
+userInput = []
 class InputBox(object):
 
     def __init__(self, x, y, w, h, text=''):
@@ -40,6 +42,7 @@ class InputBox(object):
             if self.active:
                 if event.key == pg.K_RETURN:
                     print(self.text)
+                    userInput.append(self.text)
                     self.text = ''
                 elif event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
