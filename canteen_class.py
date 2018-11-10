@@ -41,7 +41,8 @@ class InputBox(object):
         if event.type == pg.KEYDOWN:
             if self.active:
                 if event.key == pg.K_RETURN:
-                    print(self.text)
+                    print(self.rect)
+                    # print(self.text)
                     userInput.append(self.text)
                     self.text = ''
                 elif event.key == pg.K_BACKSPACE:
