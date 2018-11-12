@@ -18,13 +18,16 @@ COLOR_INACTIVE = pg.Color('lightskyblue3')
 COLOR_ACTIVE = pg.Color('dodgerblue2')
 FONT = pg.font.Font(None, 32)
 
-userInput = []
+userInput_food = []
+userInput_price = []
+
 class InputBox(object):
 
-    def __init__(self, x, y, w, h, text=''):
+    def __init__(self, x, y, w, h, ls, text=''):
         self.rect = pg.Rect(x, y, w, h)
         self.color = COLOR_INACTIVE
         self.text = text
+        self.input_list = ls
         self.txt_surface = FONT.render(text, True, self.color)
         self.active = False
 
@@ -41,9 +44,9 @@ class InputBox(object):
         if event.type == pg.KEYDOWN:
             if self.active:
                 if event.key == pg.K_RETURN:
-                    print(self.rect)
+                    # print(self.rect)
                     # print(self.text)
-                    userInput.append(self.text)
+                    self.input_list.append(self.text)
                     self.text = ''
                 elif event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
