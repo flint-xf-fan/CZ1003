@@ -3,11 +3,13 @@ import sys
 import math
 import pandas as pd
 
-from canteen_class import Canteen, InputBox, userInput
+# import * from utils
+
+from canteen_class import Canteen, InputBox, userInput_food, userInput_price
 
 ##### application configuration #####
 FPS = 60
-SIZE = (1300, 920)
+SIZE = (1317, 794)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -92,7 +94,7 @@ def read_canteens(df):
                                      row['name'],
                                      row['location'],
                                      (row['pos_x'], row['pos_y']),
-                                     row['food_types'],
+                                     row['food_types'].lower(),
                                      row['opening_closing_times'],
                                      row['rating'],
                                      row['price_range']))
@@ -125,11 +127,31 @@ def draw_canteens(screen, canteens_list, color=LIGHT_GREEN, radius=15):
 
     return canteenButton_list
 
-def get_user_input():
+def search_foodType(user_input, canteens_list):
     """
     """
-    pass
+    # try:
+        # assert user_input.lower() in ['mala', 'sandwich', 'thai', 'burgers', 'halal', 'western', 'noodles', 'fast food', 'korean', 'hala', 'japanese', 'drinks', 'chinese', 'pizza', 'vegetarian', 'pasteries', 'indonesian', 'bread', 'vietnamese', 'steamboat', 'indian', 'soup', 'pancakes']
+    search_results = []
+    # print(user_input)
+    for canteen in canteens_list:
+        food_types_list = canteen.food_types.split(',')
+        # print(food_types_list)
+        if user_input.lower() in food_types_list:
+            search_results.append(canteen.name)
+
+    return search_results
+    # except:
+        # pass
     
+
+# def search_price(user_input, canteens_list):
+#     """
+#     """
+#     search_results = []
+#     try:
+#         assert 
+
 
 def sort_canteens_by_attr(canteens_list, attr='distance', user_pos=None, k=5):
     """
@@ -169,7 +191,7 @@ def main():
     map_y = 0
 
     # button to ask user to select location on the map
-    button_getUserPos_coords = [1020, 0, 220, 50]
+    button_getUserPos_coords = [1097, 0, 220, 50]
     button_getUserPos = pygame.Rect(button_getUserPos_coords[0], button_getUserPos_coords[1], button_getUserPos_coords[2], button_getUserPos_coords[3])
 
     # button to get the nearest canteen
@@ -185,11 +207,13 @@ def main():
     button_sortByRating = pygame.Rect(button_sortByRating_coords[0],button_sortByRating_coords[1],button_sortByRating_coords[2],button_sortByRating_coords[3])
 
     ## box input
-    label_foodType_coords = [1140, 450, 220, 30]
+    label_foodType_coords = [1020, 300, 220, 30]
+    box_foodType_coords = [1020, 350, 220, 50]
+    box_foodType = InputBox(box_foodType_coords[0],box_foodType_coords[1],box_foodType_coords[2],box_foodType_coords[3], userInput_food)
 
-    box_foodType_coords = [1140, 500, 220, 50]
-    box_foodType = InputBox(box_foodType_coords[0],box_foodType_coords[1],box_foodType_coords[2],box_foodType_coords[3])
-
+    label_price_coords = [1020, 400, 220, 30]
+    box_price_coords = [1020, 450, 220, 50]
+    box_price = InputBox(box_price_coords[0],box_price_coords[1],box_price_coords[2],box_price_coords[3], userInput_price)
     # Loop until the user clicks the close button.
     done = False
     dt = pygame.time.Clock().tick(FPS) / 1000
@@ -246,6 +270,7 @@ def main():
                             # draw_text(screen, (canteen_pos_temp[0]+20, canteen_pos_temp[1]), canteen_name_temp, 10, BLACK)
 
             box_foodType.handle_event(event)
+            box_price.handle_event(event)
         ##### clean the screen #####
         screen.fill(WHITE)
 
@@ -253,22 +278,43 @@ def main():
         
 
         ### user input after entern is pressed comes here
-        if userInput:
-            userInput_str = userInput[0]
-
+        if userInput_food:
+            userInput_str = userInput_food[0]
+            print(search_foodType(userInput_str, canteens_list))
+            _ = userInput_food.pop()
+            
+        if userInput_price:
+            userInput_str = userInput_price[0]
+            print('price search box tested')
+            # print(search_foodType(userInput_str, canteens_list))
+            _ = userInput_price.pop()
 
         ##### drawing code goes here #####
 
         # Feed the box_input with events every frame
+        box_price.update()
         box_foodType.update()
+        
         box_foodType.draw(screen)
+        box_price.draw(screen)
         draw_text(screen, (label_foodType_coords[0],label_foodType_coords[1]), 
                  'Search By Food Type', size=20, color=BLACK)
+
+        
+        
+        draw_text(screen, (label_price_coords[0],label_price_coords[1]), 
+                 'Search By Price', size=20, color=BLACK)
 
         ### display the map ###
         screen.blit(map_img, (map_x, map_y))
         ### draw canteens on the map ###
         canteen_buttons = draw_canteens(screen, canteens_list)
+
+        i = 1
+        for canteen_test in canteens_list:
+            draw_text(screen, (1200, 600+i*12), canteen_test.name, 12)
+            i += 1
+
         ### show canteens information after user clicked the button/circle
         if 'canteen_pressed_id' in locals():
             id_temp = canteen_pressed_id
