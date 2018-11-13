@@ -66,7 +66,7 @@ def get_distance_a_b(pos_a, pos_b):
     return:
         distance: absolute distance
     """
-    return math.sqrt((pos_b[1] - pos_a[1])**2 + (pos_b[0] - pos_a[0])**2) 
+    return math.sqrt((pos_b[1] - pos_a[1])**2 + (pos_b[0] - pos_a[0])**2)
 
 def get_nearest_canteen(user_pos, canteens_list):
     min_distance = float('inf')
@@ -97,16 +97,17 @@ def read_canteens(df):
                                      row['food_types'].lower(),
                                      row['opening_closing_times'],
                                      row['rating'],
-                                     row['price_range']))
+                                     row['min_price'],
+                                     row['max_price']))
 
     return canteens_list
 
 def draw_canteens(screen, canteens_list, color=LIGHT_GREEN, radius=15):
-    """ draw circles to represent the canteens. 
-    
+    """ draw circles to represent the canteens.
+
     right now only draw the canteen id on top of it. because name can be too lengthy
     we may implement it an interactive button. So after the user clicks on it, we display the corresponding information
-    
+
     args:
         screen: pygame screen object
         canteens_list: list of canteen objects
@@ -123,7 +124,7 @@ def draw_canteens(screen, canteens_list, color=LIGHT_GREEN, radius=15):
 
         canteenButton_list.append(pygame.Rect(pos[0]-radius, pos[1]-radius, radius*2, radius*2))
         pygame.draw.circle(screen, color, pos, radius)
-        draw_text(screen, pos, canteen_id, 10)    
+        draw_text(screen, pos, canteen_id, 10)
 
     return canteenButton_list
 
@@ -143,14 +144,14 @@ def search_foodType(user_input, canteens_list):
     return search_results
     # except:
         # pass
-    
+
 
 # def search_price(user_input, canteens_list):
 #     """
 #     """
 #     search_results = []
 #     try:
-#         assert 
+#         assert
 
 
 def sort_canteens_by_attr(canteens_list, attr='distance', user_pos=None, k=5):
@@ -172,22 +173,22 @@ def sort_canteens_by_attr(canteens_list, attr='distance', user_pos=None, k=5):
 def main():
     # settings
     pygame.init()
-    
-    clock = pygame.time.Clock() 
+
+    clock = pygame.time.Clock()
 
 
     screen = pygame.display.set_mode(SIZE)
     pygame.display.set_caption(APP_NAME)
-    
+
     # load database(canteens.csv)
     canteens_df = pd.read_csv(CANTEENS_PATH)
     canteens_list = read_canteens(canteens_df) # a list of canteen objects
-    
+
 
     map_img = pygame.image.load(MAP_PATH)
 
     # maybe move up or move to a separate configure file
-    map_x = 0 
+    map_x = 0
     map_y = 0
 
     # button to ask user to select location on the map
@@ -195,24 +196,24 @@ def main():
     button_getUserPos = pygame.Rect(button_getUserPos_coords[0], button_getUserPos_coords[1], button_getUserPos_coords[2], button_getUserPos_coords[3])
 
     # button to get the nearest canteen
-    button_getNearestCanteen_coords = [1020, 50, 220, 50]
+    button_getNearestCanteen_coords = [1097, 50, 220, 50]
     button_getNearesrCanteen = pygame.Rect(button_getNearestCanteen_coords[0], button_getNearestCanteen_coords[1], button_getNearestCanteen_coords[2], button_getNearestCanteen_coords[3])
 
     # button to sort canteens by (absolute) distance
-    button_sortByDistance_coords = [1020, 100, 220, 50]
+    button_sortByDistance_coords = [1097, 100, 220, 50]
     button_sortByDistance = pygame.Rect(button_sortByDistance_coords[0],button_sortByDistance_coords[1],button_sortByDistance_coords[2],button_sortByDistance_coords[3])
 
     # button to sort canteens by Rating
-    button_sortByRating_coords = [1020, 150, 220, 50]
+    button_sortByRating_coords = [1097, 150, 220, 50]
     button_sortByRating = pygame.Rect(button_sortByRating_coords[0],button_sortByRating_coords[1],button_sortByRating_coords[2],button_sortByRating_coords[3])
 
     ## box input
-    label_foodType_coords = [1020, 300, 220, 30]
-    box_foodType_coords = [1020, 350, 220, 50]
+    label_foodType_coords = [1097, 200, 220, 30]
+    box_foodType_coords = [1097, 240, 220, 50]
     box_foodType = InputBox(box_foodType_coords[0],box_foodType_coords[1],box_foodType_coords[2],box_foodType_coords[3], userInput_food)
 
-    label_price_coords = [1020, 400, 220, 30]
-    box_price_coords = [1020, 450, 220, 50]
+    label_price_coords = [1097, 300, 220, 30]
+    box_price_coords = [1097, 340, 220, 50]
     box_price = InputBox(box_price_coords[0],box_price_coords[1],box_price_coords[2],box_price_coords[3], userInput_price)
     # Loop until the user clicks the close button.
     done = False
@@ -275,14 +276,14 @@ def main():
         screen.fill(WHITE)
 
         ##### app logic #####
-        
+
 
         ### user input after entern is pressed comes here
         if userInput_food:
             userInput_str = userInput_food[0]
             print(search_foodType(userInput_str, canteens_list))
             _ = userInput_food.pop()
-            
+
         if userInput_price:
             userInput_str = userInput_price[0]
             print('price search box tested')
@@ -294,15 +295,15 @@ def main():
         # Feed the box_input with events every frame
         box_price.update()
         box_foodType.update()
-        
+
         box_foodType.draw(screen)
         box_price.draw(screen)
-        draw_text(screen, (label_foodType_coords[0],label_foodType_coords[1]), 
+        draw_text(screen, (label_foodType_coords[0],label_foodType_coords[1]),
                  'Search By Food Type', size=20, color=BLACK)
 
-        
-        
-        draw_text(screen, (label_price_coords[0],label_price_coords[1]), 
+
+
+        draw_text(screen, (label_price_coords[0],label_price_coords[1]),
                  'Search By Price', size=20, color=BLACK)
 
         ### display the map ###
@@ -323,8 +324,8 @@ def main():
             line_space = 5
             for attr, value in canteens_list[id_temp].__dict__.items():
                 # print(attr)
-                if not attr in ['id', 'pos', 'food_types']: # no data for food_types yet
-                    draw_text(screen, 
+                if not attr in ['id', 'pos', 'min_price', 'max_price']: # no data for food_types yet
+                    draw_text(screen,
                             (canteen_pos_temp[0]+60, canteen_pos_temp[1]+line_space),
                             value,
                             10, BLACK)
@@ -337,7 +338,7 @@ def main():
 
         ### draw interactive buttons ###
         mouse = pygame.mouse.get_pos()
-        
+
         draw_button(screen, button_getUserPos, button_getUserPos_coords, mouse, 'Where am I?', GREEN, RED, BLACK)
         draw_button(screen, button_getNearesrCanteen, button_getNearestCanteen_coords, mouse, 'The nearest canteen?', GREEN, RED, BLACK)
         draw_button(screen, button_sortByDistance, button_sortByDistance_coords, mouse, 'Sort by Distance (top5)', GREEN, RED, BLACK)
