@@ -1,7 +1,7 @@
 import pygame as pg
 pg.init()
 class Canteen(object):
-    def __init__(self, id, name, location, pos, food_types, opening_closing_times, rating, price_range):
+    def __init__(self, id, name, location, pos, food_types, opening_closing_times, rating, min_price, max_price):
         self.id = id
         self.name = name
         self.location = location
@@ -9,7 +9,8 @@ class Canteen(object):
         self.food_types = food_types
         self.opening_closing_times = opening_closing_times
         self.rating = rating
-        self.price_range = price_range
+        self.min_price = min_price
+        self.max_price = max_price
         # more attributes to fill in
 
 
