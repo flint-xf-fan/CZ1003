@@ -1,5 +1,6 @@
 import pygame
 import math
+# import re
 ##### application configuration #####
 FPS = 60
 SIZE = (1317, 794)
@@ -23,11 +24,11 @@ def draw_message(screen, pos=(1200, 420), msg='', size=10, color=BLACK):
     if isinstance(msg, list) or isinstance(msg, tuple):
         i = 1
         for m in msg:
-            draw_text(screen, (pos[0],pos[1]+i*(size+2)), m, size, BLACK)
+            draw_text(screen, (pos[0],pos[1]+i*(size+2)), m, size, color)
             i += 1
     else:
         # print(msg, 'test')
-        draw_text(screen, pos, msg, size, BLACK)
+        draw_text(screen, pos, msg, size, color)
 
 def draw_button(screen, button, button_coords, mouse_pos, text, color=GREEN, active_color=RED, text_color=BLACK):
     """
@@ -123,5 +124,28 @@ def search_foodType(user_input, canteens_list):
         # print(food_types_list)
         if user_input.lower() in food_types_list:
             search_results.append(canteen.name)
+
+    return search_results
+
+
+def search_by_price(user_input, canteens_list):
+    search_results = []
+    try:
+        assert ',' in user_input
+        price_range =  user_input.split(',')
+        range_low = float(price_range[0])
+        range_high = float(price_range[1])
+        assert range_low <= range_high
+
+    except:
+        return 'Error! Input format example: 5,10.5'
+
+    for canteen in canteens_list:
+        min_price = float(canteen.min_price)
+        max_price = float(canteen.max_price)
+        if min_price <= range_low <= max_price or min_price <= range_high <= max_price:
+            search_results.append(canteen.name)
+    if search_results==[]:
+        return 'No such food in this range exist'
 
     return search_results

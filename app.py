@@ -192,7 +192,8 @@ def main():
         if userInput_price:
             # screen.fill(WHITE)
             userInput_str = userInput_price[0]
-            msg = 'price box display test' # print(search_foodType(userInput_str, canteens_list))
+            msg = search_by_price(userInput_str, canteens_list)
+            # msg = 'price box display test' # print(search_foodType(userInput_str, canteens_list))
             _ = userInput_price.pop()
 
         ##### drawing code goes here #####
@@ -204,12 +205,12 @@ def main():
         box_foodType.draw(screen)
         box_price.draw(screen)
         draw_text(screen, (label_foodType_coords[0],label_foodType_coords[1]),
-                 'Search By Food Type', size=20, color=BLACK)
+                 'Search By Food Type', size=15, color=BLACK)
 
 
 
         draw_text(screen, (label_price_coords[0],label_price_coords[1]),
-                 'Search By Price', size=20, color=BLACK)
+                 'Search By Price (low,high)', size=15, color=BLACK)
 
         ### display the map ###
         screen.blit(map_img, (map_x, map_y))
@@ -217,7 +218,7 @@ def main():
         canteen_buttons = draw_canteens(screen, canteens_list)
 
         # draw message to the screen
-        draw_message(screen, (1200, 420), msg, 15, BLACK)
+        draw_message(screen, (1200, 420), msg, 15, RED)
 
         ### show canteens information after user clicked the button/circle
         if 'canteen_pressed_id' in locals():
